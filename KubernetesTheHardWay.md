@@ -5,5 +5,6 @@ gcloud compute networks create kubernetesnetwork --subnet-mode custom
 ### [3] Create Subnetwork
 '''bash gcloud compute networks subnets create kubernetessubnetwork \
 --network kubernetesnetwork
---range 10.240.0.0/24 '''
+--range 10.240.0.0/24
+'''
 
