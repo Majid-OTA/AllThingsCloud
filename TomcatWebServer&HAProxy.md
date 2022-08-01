@@ -1,11 +1,9 @@
-### [1] Set up Compute Engine Instance
-
-###### Ubuntu server example: (gcloud compute instances create instance-2 --project=qwiklabs-gcp-03-a81c4f27797c --zone=us-central1-a --machine-type=e2-medium --network-interface=network-tier=PREMIUM,subnet=default --metadata=enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=7623940696-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server,https-server --create-disk=auto-delete=yes,boot=yes,device-name=instance-2,image=projects/ubuntu-os-cloud/global/images/ubuntu-1804-bionic-v20220712,mode=rw,size=25,type=projects/qwiklabs-gcp-03-a81c4f27797c/zones/us-central1-a/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any)
+### [1] Set up Compute Engine Instance on GCP
 
 ### [2] Set up Compute Engine Instance
 
 > sudo apt update
-> sudo apt upgrade
+> sudo apt upgrade 
 > sudo apt install default-jdk
 
 ### [3] Create and Setup Tomcat User: For security purposes we shall create a non root user to run the Tomcat service.
@@ -36,7 +34,7 @@
 
 ##### Download the tar file to the tmp directory:
 
-> curl -O <link>
+> curl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.65/bin/apache-tomcat-9.0.65.tar.gz
 
 ##### install tomcat using the tar file to /opt/tomcat:
 
@@ -44,7 +42,7 @@
 
 ###### --strip-components=NUMBER > strip NUMBER leading components from file names on extraction
 
-> sudo tar xzvf <filedownloaded> -C /opt/tomcat --strip-components=1
+> sudo tar xzvf apache-tomcat-9.0.65.tar.gz -C /opt/tomcat --strip-components=1
 
 ### [5] Setup user permissions:
 
@@ -60,7 +58,7 @@
 
 ### [6] Create Service: To run Tomcat as a service you need to setup this with a systemd service file.
 
-#### [a] Create the directory for Tomcat installation:
+#### [a] Locate the path of Java installation:
 
 > sudo update-java-alternatives -l
 
@@ -121,11 +119,16 @@ WantedBy=multi-user.target
 #### [a] setup username and password
 
 > sudo nano /opt/tomcat/conf/tomcat-users.xml
-> <tomcat-users . . .>
+###### At the end just before </tomcat-users> tag copy and paste the following lines:
 
-    <user username="admin" password="password" roles="manager-gui,admin-gui"/>
+<role rolename="admin"/>
+<role rolename="admin-gui"/>
+<role rolename="manager"/>
+<role rolename="manager-gui"/>
 
-</tomcat-users>
+<user username="h2s" password="pwd" roles="admin,admin-gui,manager,manager-gui"/>
+
+###### Note– Change the username and password values with whatever you want to set for your Tomcat.
 
 #### [b] By default Tomcat restricts access to Manager and Host manager.
 
@@ -153,14 +156,15 @@ WantedBy=multi-user.target
 
 - In your Google Cloud Console go to VPC Network, Firewall rules and click Create Firewall rules.
 - In Name enter tomcat
-- In Targets select All instances in the network
+- In Targets select All instances in the network, or add a tag specified for your VM during initial setup.
 - In Source filter select IP ranges
 - In Source IP ranges enter 0.0.0.0/0
 - In Protocols and ports check TCP and enter 8080.
 - Click Create
 - or in cmd:
-> gcloud compute --project= <project-id> firewall-rules create tomcat --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:8080 --source-ranges=0.0.0.0/0
 
-### Step [8] Access Tomcat Interface
+### Step [8] Access Tomcat Interface by Opening any browser on the local or remote system and point it to the IP address or domain of the server where you have installed the Apache Tomcat.
 
 > http://IP_ADDRESS:8080
+or 
+> http://youdomain.com:8080
