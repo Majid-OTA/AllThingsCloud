@@ -1,9 +1,9 @@
-### [1] Set up Compute Engine Instance on GCP
+### [1] Create Compute Engine Instance on your prefered cloud
 
 ### [2] Set up Compute Engine Instance
 
 > sudo apt update
-> sudo apt upgrade 
+> sudo apt upgrade
 > sudo apt install default-jdk
 
 ### [3] Create and Setup Tomcat User: For security purposes we shall create a non root user to run the Tomcat service.
@@ -119,6 +119,7 @@ WantedBy=multi-user.target
 #### [a] setup username and password
 
 > sudo nano /opt/tomcat/conf/tomcat-users.xml
+
 ###### At the end just before </tomcat-users> tag copy and paste the following lines:
 
 <role rolename="admin"/>
@@ -166,5 +167,5 @@ WantedBy=multi-user.target
 ### Step [8] Access Tomcat Interface by Opening any browser on the local or remote system and point it to the IP address or domain of the server where you have installed the Apache Tomcat.
 
 > http://IP_ADDRESS:8080
-or 
+> or
 > http://youdomain.com:8080
