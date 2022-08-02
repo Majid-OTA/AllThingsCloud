@@ -2,9 +2,9 @@
 
 ### [2] Set up Compute Engine Instance
 
-> sudo apt update
-> sudo apt upgrade
-> sudo apt install default-jdk
+> sudo apt update \
+> sudo apt upgrade \
+> sudo apt install default-jdk \
 
 ### [3] Create and Setup Tomcat User: For security purposes we shall create a non root user to run the Tomcat service.
 
