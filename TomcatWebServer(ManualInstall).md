@@ -1,9 +1,8 @@
 # Tomcat Server
 
+### [1] Create Compute Engine/virtual Instance with your prefered cloud provider.
 
-### [1] Create Compute Engine/virtual Instance on your prefered cloud provider
-
-### [2] Set up Virtual Machine
+### [2] Set up Virtual Machine.
 
 > sudo apt update \
 > sudo apt upgrade \
@@ -23,14 +22,15 @@
 
 > sudo useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
 
-### [4] Install Tomcat: 
+### [4] Install Tomcat:
+
 ###### to install the latest binary release of Tomcat for the official Tomcat downloads page, example "https://tomcat.apache.org/download-10.cgi", under the "Binary Distributions" section > below core, then copy the link of the file with extension tar.gz for use in the next step
 
-#### [a] Create the directory for Tomcat installation
+#### [a] Create the directory for Tomcat installation:
 
 > sudo mkdir /opt/tomcat
 
-#### [b] Download Tomcat using the link we've copied
+#### [b] Download Tomcat using the link we've copied:
 
 ##### Go to the tmp directory:
 
@@ -38,7 +38,7 @@
 
 ##### Download the tar file to the tmp directory:
 
-> curl -O <downloadurl>
+> curl -O "<downloadurl>"
 
 ##### install tomcat using the tar file to /opt/tomcat:
 
@@ -117,8 +117,8 @@ WantedBy=multi-user.target
 > sudo systemctl enable tomcat
 
 #### To confirm everything is working normally, check the status of service:
-> sudo systemctl status tomcat --no-pager -l
 
+> sudo systemctl status tomcat --no-pager -l
 
 ### [7] Configure Tomcat
 
@@ -177,14 +177,16 @@ WantedBy=multi-user.target
 > or
 > http://youdomain.com:8080
 
-
 # HAProxy
 
 ### [1] Install HAproxy
+
 > sudo apt update
 > sudo apt install haproxy
 > sudo haproxy -v
+
 ### [2] Configure HAproxy
+
 > sudo cp -a /etc/haproxy/haproxy.cfg{,.orig}
 > sudo nano /etc/haproxy/haproxy.cfg
 
@@ -197,45 +199,50 @@ frontend haproxy-main
     default_backend apache_webservers
 
 backend apache_webservers
-    mode http\
-    balance roundrobin\
-    server websvr1      <EnterServerIP>:8080 check
+mode http\
+ balance roundrobin\
+ server websvr1 <EnterServerIP>:8080 check
 
 ### [3] Restart HAProxy
+
 > sudo systemctl restart haproxy
 
 ### [4] Enable Monitoring (Optional)
+
 > sudo nano /etc/haproxy/haproxy.cfg
 
 ###### Add these lines:
 
 listen stats
 
-    bind :8800
+bind :8800
 
-    stats enable
+stats enable
 
-    stats uri
+stats uri
 
-    stats hide-version
+stats hide-version
 
-    stats auth <username>:<password>
-    
-    default_backend apache_webservers
+stats auth <username>:<password>
+
+default_backend apache_webservers
 
 ##### you can navigate to http://YOUR_HAPROXY_IP_ADDRESS:8800 to see the statistics, you will be asked for the username and password you specified earlier in /etc/haproxy/haproxy.cfg
 
 ##### Restart HAProxy
+
 > sudo systemctl restart haproxy
 
-# Security Measurements 
+# Security Measurements
 
 ###### It is recommended to let only one port open so now we need to let HAproxy only listen to port 80, then forward to local host port 8080, in that case only port 80 will be open to external/public users, and only HAProxy will forward to port 8080.
 
-### [1] Change Backend IP of HAProxy 
+### [1] Change Backend IP of HAProxy
 
 > sudo nano /etc/haproxy/haproxy.cfg
+
 ###### change the Server IP in backend section to 127.0.0.1
+
 ###### So it should look like this:
 
 > frontend haproxy-main\
@@ -245,9 +252,9 @@ listen stats
     default_backend apache_webservers
 
 backend apache_webservers\
-    mode http\
-    balance roundrobin\
-    server websvr1      127.0.0.1:8080 check
+ mode http\
+ balance roundrobin\
+ server websvr1 127.0.0.1:8080 check
 
 ### [2] Change listen IP of Tomcat to localhost
 
