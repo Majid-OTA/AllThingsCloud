@@ -38,7 +38,7 @@
 
 ##### Download the tar file to the tmp directory:
 
-> curl -O "<downloadurl>"
+> curl -O pastedownloadurl
 
 ##### install tomcat using the tar file to /opt/tomcat:
 
