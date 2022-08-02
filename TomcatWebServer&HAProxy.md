@@ -74,10 +74,10 @@
 
 [Unit]\
 Description=Apache Tomcat Web Application Container\
-After=network.target\
+After=network.target
 
 [Service]\
-Type=forking\
+Type=forking
 
 Environment=JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64\
 Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid\
@@ -93,7 +93,7 @@ User=tomcat\
 Group=tomcat\
 UMask=0007\
 RestartSec=10\
-Restart=always\
+Restart=always
 
 [Install]\
 WantedBy=multi-user.target
