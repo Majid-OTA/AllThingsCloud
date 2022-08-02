@@ -4,7 +4,7 @@
 
 > sudo apt update \
 > sudo apt upgrade \
-> sudo apt install default-jdk \
+> sudo apt install default-jdk
 
 ### [3] Create and Setup Tomcat User: For security purposes we shall create a non root user to run the Tomcat service.
 
@@ -50,7 +50,7 @@
 > sudo chgrp -R tomcat /opt/tomcat\
 > sudo chmod -R g+r conf\
 > sudo chmod g+x conf\
-> sudo chown -R tomcat webapps/ work/ temp/ logs/\
+> sudo chown -R tomcat webapps/ work/ temp/ logs/
 
 ###### chgrp command in Linux is used to change the group's ownership of a file or directory
 
