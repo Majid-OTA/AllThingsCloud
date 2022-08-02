@@ -209,12 +209,12 @@ backend apache_webservers
 
 ###### Add these lines:
 
-listen stats
-    bind :8800
-    stats enable
-    stats uri /
-    stats hide-version
-    stats auth <username>:<password>
+listen stats/
+    bind :8800/
+    stats enable/
+    stats uri/
+    stats hide-version/
+    stats auth <username>:<password>/
     default_backend apache_webservers
 
 ##### you can navigate to http://YOUR_HAPROXY_IP_ADDRESS:8800 to see the statistics, you will be asked for the username and password you specified earlier in /etc/haproxy/haproxy.cfg
