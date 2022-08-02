@@ -46,11 +46,11 @@
 
 ### [5] Setup user permissions:
 
-> cd /opt/tomcat
-> sudo chgrp -R tomcat /opt/tomcat
-> sudo chmod -R g+r conf
-> sudo chmod g+x conf
-> sudo chown -R tomcat webapps/ work/ temp/ logs/
+> cd /opt/tomcat \
+> sudo chgrp -R tomcat /opt/tomcat\
+> sudo chmod -R g+r conf\
+> sudo chmod g+x conf\
+> sudo chown -R tomcat webapps/ work/ temp/ logs/\
 
 ###### chgrp command in Linux is used to change the group's ownership of a file or directory
 
