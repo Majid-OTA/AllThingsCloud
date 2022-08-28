@@ -38,15 +38,16 @@
 
 ##### Download the tar file to the tmp directory:
 
-> curl -O pastedownloadurl
+> curl -O <pastedownloadurl>
 
 ##### install tomcat using the tar file to /opt/tomcat:
 
 ###### -C, --directory=DIR > change to directory DIR
 
 ###### --strip-components=NUMBER > strip NUMBER leading components from file names on extraction
+##### execute this command (Make sure you paste the right file name):
 
-> sudo tar xzvf <filename>.tar.gz -C /opt/tomcat --strip-components=1
+> sudo tar xzvf filename -C /opt/tomcat --strip-components=1
 
 ### [5] Setup user permissions:
 
@@ -74,35 +75,31 @@
 
 ###### Make sure to modify the JAVA_HOME with the path of your Java installation.
 
-######
+    [Unit]
+    Description=Apache Tomcat Web Application Container\
+    After=network.target
 
-[Unit]\
-Description=Apache Tomcat Web Application Container\
-After=network.target
+    [Service]
+    Type=forking
 
-[Service]\
-Type=forking
+    Environment=JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64
+    Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+    Environment=CATALINA_HOME=/opt/tomcat
+    Environment=CATALINA_BASE=/opt/tomcat
+    Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+    Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
 
-Environment=JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64\
-Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid\
-Environment=CATALINA_HOME=/opt/tomcat\
-Environment=CATALINA_BASE=/opt/tomcat\
-Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'\
-Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+    ExecStart=/opt/tomcat/bin/startup.sh
+    ExecStop=/opt/tomcat/bin/shutdown.sh
 
-ExecStart=/opt/tomcat/bin/startup.sh\
-ExecStop=/opt/tomcat/bin/shutdown.sh
+    User=tomcat
+    Group=tomcat
+    UMask=0007
+    RestartSec=10
+    Restart=always
 
-User=tomcat\
-Group=tomcat\
-UMask=0007\
-RestartSec=10\
-Restart=always
-
-[Install]\
-WantedBy=multi-user.target
-
-######
+    [Install]
+    WantedBy=multi-user.target
 
 #### [d] Reload the systemd daemon:
 
@@ -177,31 +174,33 @@ WantedBy=multi-user.target
 > or
 > http://youdomain.com:8080
 
+###### note that the webserver is only open on 8080
+
 # HAProxy
 
 ### [1] Install HAproxy
 
-> sudo apt update
-> sudo apt install haproxy
+> cd ~\
+> sudo apt update\
+> sudo apt install haproxy\
 > sudo haproxy -v
 
 ### [2] Configure HAproxy
 
-> sudo cp -a /etc/haproxy/haproxy.cfg{,.orig}
+> su\
 > sudo nano /etc/haproxy/haproxy.cfg
 
 ###### Add these lines:
 
-frontend haproxy-main
-
-    mode http\
-    bind :80\
+    frontend haproxy-main
+    mode http
+    bind :80
     default_backend apache_webservers
 
-backend apache_webservers
-mode http\
- balance roundrobin\
- server websvr1 <EnterServerIP>:8080 check
+    backend apache_webservers
+    mode http\
+    balance roundrobin\
+    server websvr1 <EnterServerIP>:8080 check
 
 ### [3] Restart HAProxy
 
@@ -213,21 +212,16 @@ mode http\
 
 ###### Add these lines:
 
-listen stats
+    listen stats
+    bind :8800
+    stats enable
+    stats uri
+    stats hide-version
+    stats auth <username>:<password>
+    default_backend apache_webservers
 
-bind :8800
-
-stats enable
-
-stats uri
-
-stats hide-version
-
-stats auth <username>:<password>
-
-default_backend apache_webservers
-
-##### you can navigate to http://YOUR_HAPROXY_IP_ADDRESS:8800 to see the statistics, you will be asked for the username and password you specified earlier in /etc/haproxy/haproxy.cfg
+##### you can navigate to http://YOUR_HAPROXY_IP_ADDRESS:8800
+##### to see the statistics, you will be asked for the username and password you specified earlier in /etc/haproxy/haproxy.cfg
 
 ##### Restart HAProxy
 
@@ -245,17 +239,15 @@ default_backend apache_webservers
 
 ###### So it should look like this:
 
-> frontend haproxy-main\
-
+    frontend haproxy-main\
     mode http\
     bind :80\
-    default_backend apache_webservers
-
-backend apache_webservers\
- mode http\
- balance roundrobin\
- server websvr1 127.0.0.1:8080 check
+    default_backend apache_webservers 
+    backend apache_webservers\
+    mode http\
+    balance roundrobin\
+    server websvr1 127.0.0.1:8080 check
 
 ### [2] Change listen IP of Tomcat to localhost
-
+> sudo su
 > sudo nano /opt/tomcat/conf/server.xml

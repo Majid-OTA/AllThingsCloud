@@ -1,6 +1,9 @@
+Set up Virtual Cloud Network
+
 ### [1] Set Default Region and Zone
 
-> gcloud config set compute\region us-central1-a
+> gcloud config set compute/region us-central1
+> gcloud config set compute/zone us-central1-a
 
 ### [2] Create The Network
 
@@ -27,7 +30,7 @@
 --source-ranges 0.0.0.0/0
 
 ### [6] Public IP Address: Allocate a static IP address that will be attached to the external load balancer fronting the Kubernetes API Servers:
-> gcloud compute addresses create kubernetes \ 
+> gcloud compute addresses create kubernetes  
 --region $(gcloud config get-value compute/region)
 
 ### [7] Check-up 
