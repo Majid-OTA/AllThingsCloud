@@ -1,0 +1,57 @@
+1- Create website folders for both virtual servers
+mkdir -p /var/www/vhs1.com/public
+mkdir -p /var/www/vhs2.com/public
+
+2- Change permissions
+sudo chmod $USER:$USER /var/www/vhs1.com/public/index.html
+sudo chmod $USER:$USER /var/www/vhs2.com/public/index.html
+sudo chmod -R 755 /var/www 
+
+3- Create default pages for both virtual host websites
+sudo nano /var/www/vhs1.com/public/index.html
+<html>
+  <head>
+    <title>Welcome to your Virtual Host #1</title>
+  </head>
+  <body>
+    <h1>Virtual host 1 is working!</h1>
+  </body>
+</html>
+
+sudo nano /var/www/vhs2.com/public/index.html
+
+<html>
+  <head>
+    <title>Welcome to your Virtual Host #2</title>
+  </head>
+  <body>
+    <h1>Virtual host 2 is working!</h1>
+  </body>
+</html>
+
+4- Creating Virtual host files
+sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/vhs1.conf
+sudo nano /etc/apache2/sites-available/vhs1.conf 
+        Make sure you have the following paramaters inside:
+             ServerAdmin majid@vhs1.com
+             ServerName vhs1
+             ServerAlias www.vhs1.com
+             DocumentRoot /var/www/vhs1.com
+             
+sudo cp /etc/apache2/sites-available/vhs1.conf /etc/apache2/sites-available/vhs2.conf
+sudo nano /etc/apache2/sites-available/vhs2.conf 
+        Make sure you have the following paramaters inside:
+             ServerAdmin majid@vhs2.com
+             ServerName vhs2
+             ServerAlias www.vhs2.com
+             DocumentRoot /var/www/vhs2.com
+             4- Creating Virtual host files
+5- Enable the new virtual hosts and reload the servers
+sudo a2ensite vhs1.conf
+sudo a2ensite vhs2.conf
+sudo a2dissite 000-default.conf
+sudo systemctl reload apache2
+sudo systemctl status apache2
+
+             
+    
