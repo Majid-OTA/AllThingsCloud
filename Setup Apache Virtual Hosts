@@ -1,6 +1,9 @@
+# Creating the Virtual Hosts on Apache
+0- install Apache Webserver
+sudo apt-get install apache2 -y
 1- Create website folders for both virtual servers
-mkdir -p /var/www/vhs1.com/public
-mkdir -p /var/www/vhs2.com/public
+sudo mkdir -p /var/www/vhs1.com/public
+sudo mkdir -p /var/www/vhs2.com/public
 
 2- Change permissions
 sudo chmod $USER:$USER /var/www/vhs1.com/public/index.html
@@ -9,6 +12,7 @@ sudo chmod -R 755 /var/www
 
 3- Create default pages for both virtual host websites
 sudo nano /var/www/vhs1.com/public/index.html
+example:
 <html>
   <head>
     <title>Welcome to your Virtual Host #1</title>
@@ -29,7 +33,7 @@ sudo nano /var/www/vhs2.com/public/index.html
   </body>
 </html>
 
-4- Creating Virtual host files
+4- Creating Virtual host configuration files
 sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/vhs1.conf
 sudo nano /etc/apache2/sites-available/vhs1.conf 
         Make sure you have the following paramaters inside:
@@ -41,17 +45,27 @@ sudo nano /etc/apache2/sites-available/vhs1.conf
 sudo cp /etc/apache2/sites-available/vhs1.conf /etc/apache2/sites-available/vhs2.conf
 sudo nano /etc/apache2/sites-available/vhs2.conf 
         Make sure you have the following paramaters inside:
-             ServerAdmin majid@vhs2.com
+             ServerAdmin admin@vhs2.com
              ServerName vhs2
              ServerAlias www.vhs2.com
-             DocumentRoot /var/www/vhs2.com
-             4- Creating Virtual host files
+             DocumentRoot /var/www/vhs2.com/public
 5- Enable the new virtual hosts and reload the servers
 sudo a2ensite vhs1.conf
 sudo a2ensite vhs2.conf
 sudo a2dissite 000-default.conf
 sudo systemctl reload apache2
 sudo systemctl status apache2
+
+6- Test the virtual host
+On your localmachine navigate to your local hosts file 
+If you're on LINUX open the command line:
+sudo nano /etc/hosts
+If you're on windows open the command line:
+notepad %windir%\system32\drivers\etc\hosts
+
+add the following replace x... with your server's ip address 
+x.x.x.x www.vhs1.com
+x.x.x.x www.vhs2.com
 
              
     
