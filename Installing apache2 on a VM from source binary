@@ -1,0 +1,44 @@
+1- Download and extract the apache package
+Download the Apache source code under the /usr/local/src/ directory. 
+
+a. Change the directory to src
+cd /usr/local/src/
+
+b. Use wget to download the Apache source code package (install wget if needed > sudo apt-get install wget)
+Example (change version as required):
+sudo wget https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.gz
+
+c. Unzip the archive file and get inside the directory
+Unzip the downloaded package. Package will be unzipped into a directory
+sudo tar -xf httpd-2.4.54.tar.gz
+
+Change the directory
+cd httpd-2.4.54
+
+2- build the installation package from the source
+Build the installation package from the source using the configuration command
+
+a. Create a new directory for the installation. We can’t install Apache in the same directory we have the source.
+sudo mkdir /usr/local/apache2.4.54
+
+b. Use configure command to build the installation package. Specify the installation directory with –prefix parameter.
+./configure –-prefix=/usr/local/apache2.4.54 –-enable-shared=max
+
+(if an error appears then you should fix this by installing these packages)
+sudo apt install -y build-essential libssl-dev libexpat-dev libpcre3-dev libapr1-dev libaprutil1-dev
+
+3- Install the apache from the build
+After the build is successful run:
+make && make install
+
+
+4- Run the Apache service
+You can start, stop, restart the Apache server with apachectl command from its bin directory.
+
+/usr/local/apache2.4.50/bin/apachectl start
+/usr/local/apache2.4.50/bin/apachectl stop
+/usr/local/apache2.4.50/bin/apachectl restart
+
+5- To check the status of the Apache service, run:
+
+ps -ef | grep apache2
