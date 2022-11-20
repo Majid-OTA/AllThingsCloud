@@ -34,11 +34,11 @@ sudo make && sudo make install
 
 
 4- Run the Apache service
-You can start, stop, restart the Apache server with apachectl command from its bin directory.
+You can start, stop, restart the Apache server with apachectl command from its bin directory:
 
-/usr/local/apache2.4.54/bin/apachectl start
-/usr/local/apache2.4.54/bin/apachectl stop
-/usr/local/apache2.4.54/bin/apachectl restart
+sudo /usr/local/apache2.4.54/bin/apachectl start
+sudo /usr/local/apache2.4.54/bin/apachectl stop
+sudo /usr/local/apache2.4.54/bin/apachectl restart
 
 5- To check the status of the Apache service, run:
 
@@ -59,7 +59,7 @@ sudo nano /etc/init.d/apache2 (edit it as shown below)
 # description: Apache is a World Wide Web server.  It is used to serve \
 # HTML files and CGI.
 
-/usr/local/apache2/bin/apachectl $@
+/usr/local/apache2.4.54/bin/apachectl $@
                                 
 sudo chmod 755 /etc/init.d/apache2
 sudo update-rc.d apache2 defaults
