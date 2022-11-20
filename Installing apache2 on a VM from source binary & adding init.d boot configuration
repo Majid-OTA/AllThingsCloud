@@ -60,7 +60,8 @@ sudo nano /etc/init.d/apache2 (edit it as shown below)
 # HTML files and CGI.
 
 /usr/local/apache2.4.54/bin/apachectl $@
-                                
+
+
 sudo chmod 755 /etc/init.d/apache2
 sudo update-rc.d apache2 defaults
 sudo /etc/init.d/apache2 start
