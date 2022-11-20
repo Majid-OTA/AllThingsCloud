@@ -32,40 +32,38 @@ sudo apt install -y build-essential libssl-dev libexpat-dev libpcre3-dev libapr1
 After the build is successful run:
 sudo make && sudo make install
 
+4- Confuguring service startup:
+cp /usr/local/apache2.4.54/bin/apachectl /etc/init.d/apachectl
+chmod +x /etc/init.d/apachectl
+/usr/sbin/update-rc.d -f apachectl defaults
+adduser --system apache
+cd /etc/systemd/system
+nano apache2.service
 
-4- Run the Apache service
-You can start, stop, restart the Apache server with apachectl command from its bin directory:
+[Unit]
+Description=The Apache Webserver
+After=network.target nss-lookup.target time-sync.target remote-fs.target
+Before=getty@tty1.service plymouth-quit.service xdm.service
+PartOf=apache2.target
 
-sudo /usr/local/apache2.4.54/bin/apachectl start
-sudo /usr/local/apache2.4.54/bin/apachectl stop
-sudo /usr/local/apache2.4.54/bin/apachectl restart
+[Service]
+Type=notify
+PrivateTmp=true
+ExecStart=/usr/local/apache2.4.54/bin/apachectl start
+ExecReload=/usr/local/apache2.4.54/bin/apachectl reload
+ExecStop=/usr/local/apache2.4.54/bin/apachectl stop
+KillMode=mixed
+TasksMax=infinity
+NotifyAccess=all
 
-5- To check the status of the Apache service, run:
-
-ps -ef | grep apache2
-
-6- Confuguring an init.d to make sure the apache2 service runs at startup:
-cd /etc/init.d && ls
-# You'll see that there is no apache2 configuration file, You want to add its init script to the appropriate run level.
-The init script is typically /etc/init.d/apache2 where you could manually run /etc/init.d/apache2 start to start it.
-
-We need to add that script first:
-sudo nano /etc/init.d/apache2 (edit it as shown below)
-#!/bin/bash
-#
-# apache2        Startup script for the Apache HTTP Server
-#
-# chkconfig: 3 85 15
-# description: Apache is a World Wide Web server.  It is used to serve \
-# HTML files and CGI.
-
-/usr/local/apache2.4.54/bin/apachectl $@
+[Install]
+WantedBy=multi-user.target
+Alias=httpd.service apache.service
 
 
-sudo chmod 755 /etc/init.d/apache2
-sudo update-rc.d apache2 defaults
-sudo /etc/init.d/apache2 start
+5- Running the Apache service
 
-to make sure the service is running run:
-sudo ps -ef | grep httpd
-
+systemctl daemon-reload
+systemctl start apache2.service
+systemctl enable apache2.service
+systemctl status apache2.service
