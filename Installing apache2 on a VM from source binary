@@ -18,27 +18,53 @@ cd httpd-2.4.54
 2- build the installation package from the source
 Build the installation package from the source using the configuration command
 
-a. Create a new directory for the installation. We can’t install Apache in the same directory we have the source.
+a. Create a new directory for the installation. We can’t install Apache in the same directory where we have the source.
 sudo mkdir /usr/local/apache2.4.54
 
 b. Use configure command to build the installation package. Specify the installation directory with –prefix parameter.
-./configure –-prefix=/usr/local/apache2.4.54 –-enable-shared=max
+sudo ./configure –-prefix=/usr/local/apache2.4.54 –-enable-shared=max
+## (Retype the flags manualy and not copying them if you get this "error: invalid variable name")
 
-(if an error appears then you should fix this by installing these packages)
+## (if another error while building appears then you should fix this by installing these packages)
 sudo apt install -y build-essential libssl-dev libexpat-dev libpcre3-dev libapr1-dev libaprutil1-dev
 
 3- Install the apache from the build
 After the build is successful run:
-make && make install
+sudo make && sudo make install
 
 
 4- Run the Apache service
 You can start, stop, restart the Apache server with apachectl command from its bin directory.
 
-/usr/local/apache2.4.50/bin/apachectl start
-/usr/local/apache2.4.50/bin/apachectl stop
-/usr/local/apache2.4.50/bin/apachectl restart
+/usr/local/apache2.4.54/bin/apachectl start
+/usr/local/apache2.4.54/bin/apachectl stop
+/usr/local/apache2.4.54/bin/apachectl restart
 
 5- To check the status of the Apache service, run:
 
 ps -ef | grep apache2
+
+6- Confuguring an init.d to make sure the apache2 service runs at startup:
+cd /etc/init.d && ls
+# You'll see that there is no apache2 configuration file, You want to add its init script to the appropriate run level.
+The init script is typically /etc/init.d/apache2 where you could manually run /etc/init.d/apache2 start to start it.
+
+We need to add that script first:
+sudo nano /etc/init.d/apache2 (edit it as shown below)
+#!/bin/bash
+#
+# apache2        Startup script for the Apache HTTP Server
+#
+# chkconfig: 3 85 15
+# description: Apache is a World Wide Web server.  It is used to serve \
+# HTML files and CGI.
+
+/usr/local/apache2/bin/apachectl $@
+                                
+sudo chmod 755 /etc/init.d/apache2
+sudo update-rc.d apache2 defaults
+sudo /etc/init.d/apache2 start
+
+to make sure the service is running run:
+sudo ps -ef | grep httpd
+
